@@ -5,179 +5,175 @@ let dbs = null;
 const cache = {};
 
 export default function db(namespace) {
-    if (!dbs) {
-        dbs = JSON.parse(localStorage.getItem("customDBs")) || {};
-    }
+  if (!dbs) {
+    dbs = JSON.parse(localStorage.getItem("customDBs")) || {};
+  }
 
-    if (!dbs[namespace]) {
-        dbs[namespace] = {
-            __lastId: 0,
-            __totalReads: 0,
-            __totalWrites: 0,
-            __totalOperations: 0,
-        };
+  if (!dbs[namespace]) {
+    dbs[namespace] = {
+      __lastId: 0,
+      __totalReads: 0,
+      __totalWrites: 0,
+      __totalOperations: 0,
+    };
 
-        saveDBs();
-    }
+    saveDBs();
+  }
 
-    const sn = dbs[namespace]; // Selected namespace
+  const sn = dbs[namespace]; // Selected namespace
 
-    const res: Db = {
-        /**
+  const res: Db = {
+    /**
             `db.get('users')` => [{id:1, name},]`
             `db.get('users', 1);` `users.get(1);` // Get by id
             `db.get('users', 'name', 'pepito')`
         **/
-        get: (collection, id: any, specific) => {
-            sn.__totalReads++;
+    get: (collection, id: any, specific) => {
+      sn.__totalReads++;
 
-            const mode = getMode(collection, id, specific);
+      const mode = getMode(collection, id, specific);
 
-            if (!sn[collection]) {
-                createCollection(sn, collection);
-            }
+      if (!sn[collection]) {
+        createCollection(sn, collection);
+      }
 
-            const c = sn[collection]; // Collection
-            switch (mode) {
-                case GetModes.DOCUMENT:
-                    return c.data;
-                case GetModes.ID:
-                    return c.data.find((doc) => doc.id === id);
-                case GetModes.SPECIFIC:
-                    return c.data.find((doc) => doc[id] === specific);
-            }
-        },
-        add: (collection, doc) => {
-            sn.__totalOperations++;
-            sn.__totalWrites++;
+      const c = sn[collection]; // Collection
+      switch (mode) {
+      case GetModes.DOCUMENT:
+        return c.data;
+      case GetModes.ID:
+        return c.data.find((doc) => doc.id === id);
+      case GetModes.SPECIFIC:
+        return c.data.find((doc) => doc[id] === specific);
+      }
+    },
+    add: (collection, doc) => {
+      sn.__totalOperations++;
+      sn.__totalWrites++;
 
-            if (!sn[collection]) {
-                createCollection(sn, collection);
-            }
+      if (!sn[collection]) {
+        createCollection(sn, collection);
+      }
+      const c = sn[collection]; // Collection
 
-            const c = sn[collection]; // Collection
+      doc.__id = ++sn.__lastId;
+      doc.id = ++c.__lastId;
+      doc.createdAt = new Date();
+      doc.updatedAt = doc.createdAt;
 
-            doc.__id = ++sn.__lastId;
-            doc.id = ++c.__lastId;
-            doc.createdAt = new Date();
-            doc.updatedAt = doc.createdAt;
+      c.data.push(doc);
 
-            c.data.push(doc);
+      debug && console.info(`Added ${collection} ${doc.id}, __id: ${doc.__id}`);
 
-            debug &&
-                console.info(
-                    `Added ${collection} ${doc.id}, __id: ${doc.__id}`
-                );
+      saveDBs();
 
-            saveDBs();
+      return doc;
+    },
+    update: (collection, id: any, doc) => {
+      sn.__totalOperations++;
+      sn.__totalWrites++;
 
-            return doc;
-        },
-        update: (collection, id: any, doc) => {
-            sn.__totalOperations++;
-            sn.__totalWrites++;
+      const c = sn[collection];
+      const index = c.data.findIndex((doc) => doc.id === id);
 
-            const c = sn[collection];
-            const index = c.data.findIndex((doc) => doc.id === id);
+      c.data[index] = {
+        ...c.data[index],
+        ...doc,
+        updatedAt: new Date(),
+      };
 
-            c.data[index] = {
-                ...c.data[index],
-                ...doc,
-                updatedAt: new Date(),
-            };
+      c.updatedAt = new Date();
 
-            c.updatedAt = new Date();
+      cache[generateCacheKey(collection, id)] = c.data[index];
 
-            cache[generateCacheKey(collection, id)] = c.data[index];
+      saveDBs();
 
-            saveDBs();
+      return c.data[index];
+    },
 
-            return c.data[index];
-        },
+    remove: (collection, id) => {
+      sn.__totalOperations++;
+      sn.__totalWrites++;
 
-        remove: (collection, id) => {
-            sn.__totalOperations++;
-            sn.__totalWrites++;
+      const c = sn[collection];
+      const index = c.data.findIndex((doc) => doc.id === id);
+      c.data.splice(index, 1);
 
-            const c = sn[collection];
-            const index = c.data.findIndex((doc) => doc.id === id);
-            c.data.splice(index, 1);
+      c.updatedAt = new Date();
 
-            c.updatedAt = new Date();
+      saveDBs();
 
-            saveDBs();
+      delete cache[generateCacheKey(collection, id)];
+    },
+    getC: () => {},
+  };
 
-            delete cache[generateCacheKey(collection, id)];
-        },
-        getC: () => {},
-    };
+  res.getC = (collection, id, specific) => {
+    sn.__totalOperations++;
 
-    res.getC = (collection, id, specific) => {
-        sn.__totalOperations++;
+    const term = generateCacheKey(collection, id, specific);
 
-        const term = generateCacheKey(collection, id, specific);
+    if (!cache[term]) {
+      const document = res.get(collection, id, specific);
 
-        if (!cache[term]) {
-            const document = res.get(collection, id, specific);
+      if (document) {
+        debug && console.info("getC", term, "set");
 
-            if (document) {
-                debug && console.info("getC", term, "set");
+        cache[term] = document;
+      }
+    }
 
-                cache[term] = document;
-            }
-        }
+    debug && console.info("getC", term, cache[term] && cache[term].__id);
 
-        debug && console.info("getC", term, cache[term] && cache[term].__id);
+    return cache[term];
+  };
 
-        return cache[term];
-    };
-
-    return res;
+  return res;
 }
 
 function getMode(collection, id, specific = ""): GetModes {
-    if (specific) {
-        return GetModes.SPECIFIC;
-    }
+  if (specific) {
+    return GetModes.SPECIFIC;
+  }
 
-    if (id) {
-        return GetModes.ID;
-    }
+  if (id) {
+    return GetModes.ID;
+  }
 
-    return GetModes.DOCUMENT;
+  return GetModes.DOCUMENT;
 }
 
 enum GetModes {
-    DOCUMENT,
-    ID,
-    SPECIFIC,
+  DOCUMENT,
+  ID,
+  SPECIFIC,
 }
 
 function generateCacheKey(collection, id, specific = "") {
-    return `${collection}_${id}_${specific}`;
+  return `${collection}_${id}_${specific}`;
 }
 
 function saveDBs() {
-    console.info("saving");
+  console.info("saving");
 
-    localStorage.setItem("customDBs", JSON.stringify(dbs));
+  localStorage.setItem("customDBs", JSON.stringify(dbs));
 }
 
 function createCollection(sn, collection) {
-    const c = {
-        __lastId: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        data: [],
-    };
+  const c = {
+    __lastId: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    data: [],
+  };
 
-    sn[collection] = c;
+  sn[collection] = c;
 }
 
 export interface Db {
-    get: (collection: string, id?: number, specific?: string) => any;
-    add: (collection: string, doc: any) => void;
-    update: (collection: string, id: number, doc: any) => any;
-    remove: (collection: string, id: number) => void;
-    getC: (collection: string, id?: number, specific?: string) => any;
+  get: (collection: string, id?: number, specific?: string) => any;
+  add: (collection: string, doc: any) => void;
+  update: (collection: string, id: number, doc: any) => any;
+  remove: (collection: string, id: number) => void;
+  getC: (collection: string, id?: number, specific?: string) => any;
 }
