@@ -20,14 +20,6 @@ export function ExpenseQuantitySelector({ value, onChange }) {
     onChange(event.target.value === "" ? "" : Number(event.target.value));
   };
 
-  const handleBlur = () => {
-    if (value < 0) {
-      onChange(0);
-    } else if (value > 100) {
-      onChange(100);
-    }
-  };
-
   return (
     <>
       <Grid item>
@@ -45,7 +37,6 @@ export function ExpenseQuantitySelector({ value, onChange }) {
           <Input
             value={value}
             onChange={handleInputChange}
-            onBlur={handleBlur}
             inputProps={{
               step: 1,
               min: 1,

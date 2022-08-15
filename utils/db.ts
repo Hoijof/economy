@@ -91,7 +91,7 @@ export default function db(namespace) {
       return c.data[index];
     },
 
-    remove: (collection, id) => {
+    delete: (collection, id) => {
       sn.__totalOperations++;
       sn.__totalWrites++;
 
@@ -180,6 +180,6 @@ export interface Db {
   get: (collection: string, id?: number, specific?: string) => any;
   add: (collection: string, doc: any) => void;
   update: (collection: string, id: number, doc: any) => any;
-  remove: (collection: string, id: number) => void;
+  delete: (collection: string, id: number) => void;
   getForced: (collection: string, id?: number, specific?: string) => any;
 }

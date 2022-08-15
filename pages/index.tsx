@@ -44,6 +44,15 @@ export default function Home() {
     return translation ? t[translation] : name;
   }, [db, t]);
 
+  const deleteExpense = useCallback((id: number) => {
+    if (!db) {
+      return;
+    }
+
+    db.delete("expenses", id);
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  } , [db, expenses]);
+
   return (
     <div>
       <Head>
@@ -67,8 +76,8 @@ export default function Home() {
         </Grid>
 
         <Grid container direction="column">
-          {expenses.map(({ quantity, type, date, tags, __id }) => (
-            <Card key={__id} sx={{ margin: 2 }}>
+          {expenses.map(({ id, quantity, type, date, tags }) => (
+            <Card key={id} sx={{ margin: 2 }}>
               <CardContent>
                 <Grid container direction="row">
                   <Grid item xs={2}>
@@ -92,7 +101,7 @@ export default function Home() {
                     </Typography>
                   </Grid>
                   <Grid item xs={1} sx={{ textAlign: "right" }}>
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={() => {deleteExpense(id)}}>
                       <DeleteIcon />
                     </IconButton>
                   </Grid>
