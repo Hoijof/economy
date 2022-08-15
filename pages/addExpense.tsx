@@ -9,17 +9,9 @@ import { Typography, Grid, Button } from "@mui/material";
 
 import useDb from "../hooks/useDb";
 
-export default function Home() {
-    const db = useDb('economy');
 
-    const [oMoney, setOMoney] = React.useState(0);
-    
-    React.useEffect (() => {
-        console.log(db);
-        if (db) {
-            setOMoney(db.get('expenses'));
-        }
-    } , [db]);
+export default function AddExpense() {
+    const db = useDb('economy');
     
     return (
         <div>

@@ -16,6 +16,8 @@ export default function db(namespace) {
             __totalWrites: 0,
             __totalOperations: 0,
         };
+
+        saveDBs();
     }
 
     const sn = dbs[namespace]; // Selected namespace
