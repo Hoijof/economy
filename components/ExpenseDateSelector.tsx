@@ -11,7 +11,6 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 // @ts-ignore
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // @ts-ignore
-
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import useTranslation from "../hooks/useTranslation";

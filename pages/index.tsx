@@ -2,6 +2,8 @@ import React from "react";
 // @ts-ignore
 import Head from "next/head";
 // @ts-ignore
+import Link from "next/link";
+// @ts-ignore
 import dayjs from "dayjs";
 import {
     Typography,
@@ -11,12 +13,15 @@ import {
     CardContent,
     // @ts-ignore
 } from "@mui/material";
+// @ts-ignore
+import AddIcon from "@mui/icons-material/Add";
 
 // @ts-ignore
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import useDb from "../hooks/useDb";
 import useTranslation from "../hooks/useTranslation";
+import { TagSharp } from "../node_modules/@mui/icons-material/index";
 
 export default function Home() {
     const db = useDb("economy");
@@ -40,15 +45,24 @@ export default function Home() {
 
             <main>
                 <Typography variant="h4">Summary</Typography>
-                <Typography variant="body1">
-                    This is the summary of the economy.
-                </Typography>
+
+                <Grid container padding={2} spacing={2}>
+                    <Grid item xs>
+                        <Typography variant="body1">Expenses</Typography>
+                    </Grid>
+                    <Grid item xs={2} sx={{ textAlign: "right" }}>
+                        <Link href="/addExpense">
+                            <AddIcon sx={{ fontSize: 35 }} />
+                        </Link>
+                    </Grid>
+                </Grid>
+
                 <Grid container direction="column">
-                    {expenses.map(({ quantity, type, date, __id }) => (
+                    {expenses.map(({ quantity, type, date, tags, __id }) => (
                         <Card key={__id} sx={{ margin: 2 }}>
                             <CardContent>
                                 <Grid container direction="row">
-                                    <Grid item xs={4}>
+                                    <Grid item xs={2}>
                                         <Typography
                                             gutterBottom
                                             variant="h5"
@@ -57,11 +71,7 @@ export default function Home() {
                                             {quantity}
                                         </Typography>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={3}
-                                        sx={{ textAlign: "right" }}
-                                    >
+                                    <Grid item xs={3}>
                                         <Typography
                                             variant="body2"
                                             color="text.secondary"
@@ -69,11 +79,7 @@ export default function Home() {
                                             {type}
                                         </Typography>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={3}
-                                        sx={{ textAlign: "right" }}
-                                    >
+                                    <Grid item xs={3}>
                                         <Typography
                                             variant="body2"
                                             color="text.secondary"
@@ -83,7 +89,16 @@ export default function Home() {
                                             )}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={3}>
+                                        <Typography variant="body2">
+                                            {t["addExpenseTags"]}: {tags.length}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={1}
+                                        sx={{ textAlign: "right" }}
+                                    >
                                         <IconButton size="small">
                                             <DeleteIcon />
                                         </IconButton>

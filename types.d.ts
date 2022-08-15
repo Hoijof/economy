@@ -16,4 +16,5 @@ interface Expense {
     quantity: number;
     type: string;
     date: Date;
+    tags: string[];
 }

@@ -20,7 +20,7 @@ export function ExpenseTypeSelector({ type, onChange, options }) {
     const [t] = useTranslation();
 
     const handleClickType = useCallback(() => {
-        console.log("handleClickType");
+        console.warn("handleClickType not yet impelemented");
     }, []);
 
     const handleChangeType = useCallback(

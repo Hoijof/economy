@@ -1,7 +1,8 @@
-export function createExpense(quantity, type, date): Expense {
+export function createExpense(quantity, type, date, tags): Expense {
     return {
         quantity,
         type,
         date,
+        tags,
     };
 }

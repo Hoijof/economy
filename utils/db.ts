@@ -1,4 +1,4 @@
-import { debug } from './consts';
+import { debug } from "./consts";
 
 let dbs = null;
 
@@ -6,7 +6,7 @@ const cache = {};
 
 export default function db(namespace) {
     if (!dbs) {
-        dbs = JSON.parse(localStorage.getItem('customDBs')) || {};
+        dbs = JSON.parse(localStorage.getItem("customDBs")) || {};
     }
 
     if (!dbs[namespace]) {
@@ -22,7 +22,7 @@ export default function db(namespace) {
 
     const sn = dbs[namespace]; // Selected namespace
 
-    const res:Db = {
+    const res: Db = {
         /**
             `db.get('users')` => [{id:1, name},]`
             `db.get('users', 1);` `users.get(1);` // Get by id
@@ -34,17 +34,17 @@ export default function db(namespace) {
             const mode = getMode(collection, id, specific);
 
             if (!sn[collection]) {
-                sn[collection] = [];
-                sn[collection].__lastId = 0;
+                createCollection(sn, collection);
             }
-            
-            switch(mode) {
+
+            const c = sn[collection]; // Collection
+            switch (mode) {
                 case GetModes.DOCUMENT:
-                    return sn[collection];
+                    return c.data;
                 case GetModes.ID:
-                    return sn[collection].find(doc => doc.id === id);
+                    return c.data.find((doc) => doc.id === id);
                 case GetModes.SPECIFIC:
-                    return sn[collection].find(doc => doc[id] === specific);
+                    return c.data.find((doc) => doc[id] === specific);
             }
         },
         add: (collection, doc) => {
@@ -52,18 +52,22 @@ export default function db(namespace) {
             sn.__totalWrites++;
 
             if (!sn[collection]) {
-                sn[collection] = [];
-                sn[collection].__lastId = 0;
+                createCollection(sn, collection);
             }
 
+            const c = sn[collection]; // Collection
+
             doc.__id = ++sn.__lastId;
-            doc.id = ++sn[collection].__lastId;
+            doc.id = ++c.__lastId;
             doc.createdAt = new Date();
             doc.updatedAt = doc.createdAt;
 
-            sn[collection].push(doc);
+            c.data.push(doc);
 
-            debug && console.info(`Added ${collection} ${doc.id}, __id: ${doc.__id}`);
+            debug &&
+                console.info(
+                    `Added ${collection} ${doc.id}, __id: ${doc.__id}`
+                );
 
             saveDBs();
 
@@ -73,30 +77,36 @@ export default function db(namespace) {
             sn.__totalOperations++;
             sn.__totalWrites++;
 
-            const index = sn[collection].findIndex(doc => doc.id === id);
-            
-            sn[collection][index] = {
-                ...sn[collection][index],
+            const c = sn[collection];
+            const index = c.data.findIndex((doc) => doc.id === id);
+
+            c.data[index] = {
+                ...c.data[index],
                 ...doc,
                 updatedAt: new Date(),
             };
 
-            cache[generateCacheKey(collection, id)] = sn[collection][index];
+            c.updatedAt = new Date();
+
+            cache[generateCacheKey(collection, id)] = c.data[index];
 
             saveDBs();
 
-            return sn[collection][index];
+            return c.data[index];
         },
 
         remove: (collection, id) => {
             sn.__totalOperations++;
             sn.__totalWrites++;
 
-            const index = sn[collection].findIndex(doc => doc.id === id);
-            sn[collection].splice(index, 1);
-            
+            const c = sn[collection];
+            const index = c.data.findIndex((doc) => doc.id === id);
+            c.data.splice(index, 1);
+
+            c.updatedAt = new Date();
+
             saveDBs();
-            
+
             delete cache[generateCacheKey(collection, id)];
         },
         getC: () => {},
@@ -111,23 +121,21 @@ export default function db(namespace) {
             const document = res.get(collection, id, specific);
 
             if (document) {
-                debug && console.info('getC', term, 'set');
+                debug && console.info("getC", term, "set");
 
                 cache[term] = document;
             }
         }
-        
-        debug && console.info('getC', term, cache[term] && cache[term].__id);
+
+        debug && console.info("getC", term, cache[term] && cache[term].__id);
 
         return cache[term];
-
     };
 
     return res;
 }
 
-
-function getMode(collection, id, specific=''): GetModes {
+function getMode(collection, id, specific = ""): GetModes {
     if (specific) {
         return GetModes.SPECIFIC;
     }
@@ -142,23 +150,34 @@ function getMode(collection, id, specific=''): GetModes {
 enum GetModes {
     DOCUMENT,
     ID,
-    SPECIFIC
-};
+    SPECIFIC,
+}
 
-function generateCacheKey(collection, id, specific='') {
+function generateCacheKey(collection, id, specific = "") {
     return `${collection}_${id}_${specific}`;
 }
 
 function saveDBs() {
-    console.log('saving');
+    console.info("saving");
 
-    localStorage.setItem('customDBs', JSON.stringify(dbs));
+    localStorage.setItem("customDBs", JSON.stringify(dbs));
+}
+
+function createCollection(sn, collection) {
+    const c = {
+        __lastId: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        data: [],
+    };
+
+    sn[collection] = c;
 }
 
 export interface Db {
-    get: (collection:string, id?:number, specific?:string) => any;
-    add: (collection:string, doc:any) => void;
-    update: (collection:string, id:number, doc:any) => any;
-    remove: (collection:string, id:number) => void;
-    getC: (collection:string, id?:number, specific?:string) => any;
-};
+    get: (collection: string, id?: number, specific?: string) => any;
+    add: (collection: string, doc: any) => void;
+    update: (collection: string, id: number, doc: any) => any;
+    remove: (collection: string, id: number) => void;
+    getC: (collection: string, id?: number, specific?: string) => any;
+}
