@@ -8,7 +8,16 @@
         "addExpenseCTA": "Add Expense",
         "addExpenseTags": "Tags",
         "dateFormat": "MM/DD/YYYY",
-        "home": "Home"
+        "home": "Home",
+
+        "expenseTagStandard": "Standard",
+        "expenseTagUnexpected": "Unexpected",
+        "expenseTagRecurrent": "Recurrent",
+
+        "expenseTypeFastFood": "Fast Food",
+        "expenseTypeGroceries": "Groceries",
+        "expenseTypeTransport": "Transport",
+        "expenseTypeBill": "Bill"
     },
     "es": {
         "delete": "Borrar",
@@ -19,6 +28,15 @@
         "addExpenseCTA": "Añadir Gasto",
         "addExpenseTags": "Etiquetas",
         "dateFormat": "DD/MM/YYYY",
-        "home": "Inicio"
+        "home": "Inicio",
+
+        "expenseTagStandard": "Estándar",
+        "expenseTagUnexpected": "Inesperado",
+        "expenseTagRecurrent": "Recurrente",
+
+        "expenseTypeFastFood": "Comida rápida",
+        "expenseTypeGroceries": "Comida",
+        "expenseTypeTransport": "Transporte",
+        "expenseTypeBill": "Factura"
     }
 }

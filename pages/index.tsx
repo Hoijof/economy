@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 // @ts-ignore
 import Head from "next/head";
 // @ts-ignore
@@ -21,7 +21,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import useDb from "../hooks/useDb";
 import useTranslation from "../hooks/useTranslation";
-import { TagSharp } from "../node_modules/@mui/icons-material/index";
 
 export default function Home() {
   const db = useDb("economy");
@@ -34,6 +33,16 @@ export default function Home() {
       setExpenses(db.get("expenses") as Expense[]);
     }
   }, [db]);
+
+  const getTypeName = useCallback((typeId: number) => {
+    if (!db) {
+      return;
+    }
+
+    const { name, translation} = db.get('expenseTypes', typeId);
+
+    return translation ? t[translation] : name;
+  }, [db, t]);
 
   return (
     <div>
@@ -69,7 +78,7 @@ export default function Home() {
                   </Grid>
                   <Grid item xs={3}>
                     <Typography variant="body2" color="text.secondary">
-                      {type}
+                      {getTypeName(type)}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>

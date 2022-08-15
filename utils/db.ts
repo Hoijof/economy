@@ -28,7 +28,7 @@ export default function db(namespace) {
             `db.get('users', 1);` `users.get(1);` // Get by id
             `db.get('users', 'name', 'pepito')`
         **/
-    get: (collection, id: any, specific) => {
+    getForced: (collection, id: any, specific) => {
       sn.__totalReads++;
 
       const mode = getMode(collection, id, specific);
@@ -105,27 +105,33 @@ export default function db(namespace) {
 
       delete cache[generateCacheKey(collection, id)];
     },
-    getC: () => {},
+    get: () => {},
   };
 
-  res.getC = (collection, id, specific) => {
+  res.get = (collection, id, specific) => {
     sn.__totalOperations++;
 
     const term = generateCacheKey(collection, id, specific);
+    let result = cache[term];
 
-    if (!cache[term]) {
-      const document = res.get(collection, id, specific);
+    if (!result) {
+      const document = res.getForced(collection, id, specific);
 
       if (document) {
-        debug && console.info("getC", term, "set");
-
-        cache[term] = document;
+        if (id) {
+          cache[term] = document;
+          debug && console.info("get", term, "set cache");
+        } else {
+          debug && console.info("get", term, "avoid caching");
+        }
+        
+        result = document;
       }
     }
 
-    debug && console.info("getC", term, cache[term] && cache[term].__id);
+    debug && console.info("get", term, cache[term] && cache[term].__id);
 
-    return cache[term];
+    return result;
   };
 
   return res;
@@ -175,5 +181,5 @@ export interface Db {
   add: (collection: string, doc: any) => void;
   update: (collection: string, id: number, doc: any) => any;
   remove: (collection: string, id: number) => void;
-  getC: (collection: string, id?: number, specific?: string) => any;
+  getForced: (collection: string, id?: number, specific?: string) => any;
 }

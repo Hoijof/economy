@@ -25,7 +25,7 @@ export function ExpenseTypeSelector({ type, onChange, options }) {
 
   const handleChangeType = useCallback(
     (event) => {
-      onChange(event.target.value as string);
+      onChange(event.target.value as number);
     },
     [onChange]
   );
@@ -56,9 +56,9 @@ export function ExpenseTypeSelector({ type, onChange, options }) {
             label={t["addExpenseType"]}
             onChange={handleChangeType}
           >
-            {options.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+            {options.map(({id, name, translation}) => (
+              <MenuItem key={id} value={id}>
+                {translation ? t[translation] : name}
               </MenuItem>
             ))}
           </Select>

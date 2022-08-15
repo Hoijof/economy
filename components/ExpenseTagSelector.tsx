@@ -20,20 +20,20 @@ export function ExpenseTagSelector({ tags, onChange, options }) {
   const [t] = useTranslation();
 
   const handleClickType = useCallback(() => {
-    console.warn("handleClickTags not yet impelemented");
+    console.warn("handleClickTags not yet implemented");
   }, []);
 
   const handleChangeTag = useCallback(
     (event) => {
-      const value = event.target.innerText as string;
+      const id = event.target.value as number;
 
-      if (tags.includes(value)) {
-        onChange(tags.filter((tag) => tag !== value));
+      if (tags.includes(id)) {
+        onChange(tags.filter((tag) => tag !== id));
 
         return;
       }
 
-      onChange([...tags, value]);
+      onChange([...tags, id]);
     },
     [onChange, tags]
   );
@@ -52,15 +52,17 @@ export function ExpenseTagSelector({ tags, onChange, options }) {
           </IconButton>
         </Grid>
       </Grid>
-      <Grid item>
-        {options.map((option) => (
-          <MenuItem
-            key={option}
-            selected={tags.includes(option)}
-            onClick={handleChangeTag}
-          >
-            {option}
-          </MenuItem>
+      <Grid container item spacing={1}>
+        {options.map(({id, name, translation}) => (
+          <Grid item xs={6} key={id}>
+            <MenuItem
+              value={id}
+              selected={tags.includes(id)}
+              onClick={handleChangeTag}
+            >
+              {translation ? t[translation] : name}
+            </MenuItem>
+          </Grid>
         ))}
       </Grid>
     </>

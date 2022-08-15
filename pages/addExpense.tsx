@@ -3,6 +3,8 @@ import React, { useState, useCallback } from "react";
 import Head from "next/head";
 // @ts-ignore
 import Link from "next/link";
+// @ts-ignore
+import { useRouter } from 'next/router';
 
 import {
   Typography,
@@ -25,20 +27,51 @@ import { ExpenseTagSelector } from "../components/ExpenseTagSelector";
 export default function AddExpense() {
   const db = useDb("economy");
   const [t] = useTranslation();
+  const router = useRouter();
 
-  const typeOptions = ["Standard", "Unexpected", "Other"];
-  const tagOptions = ["Fast Food", "Groceries", "Transport", "Other"];
+  const [tagOptions, setTagOptions] = useState([]);
+  const [typeOptions, setTypeOptions] = useState([]);
 
-  const [type, setType] = useState("Standard");
+  const [type, setType] = useState(1);
   const [quantity, setQuantity] = useState(50);
   const [date, setDate] = useState(new Date());
   const [tags, setTags] = useState([]);
 
+  React.useEffect(() => {
+    if (db) {
+      let tags = db.get('expenseTags');
+
+      if (tags.length === 0) {
+        tags = createDefaultTags(db);
+      }
+
+      setTagOptions(tags);
+    }
+  } , [db]);
+
+  React.useEffect(() => {
+    if (db) {
+      let types = db.get('expenseTypes');
+      
+      if (types.length === 0) {
+        types = createDefaultTypes(db);
+      }
+
+      setTypeOptions(types);
+    }
+  } , [db]);
+
   const handleAddExpense = useCallback(() => {
     if (db) {
       db.add("expenses", createExpense(quantity, type, date, tags));
+
+      router.push('/')
     }
-  }, [db, quantity, type, date, tags]);
+  }, [db, quantity, type, date, tags, router]);
+
+  if (!db || tagOptions.length === 0 || typeOptions.length === 0) {
+    return null;
+  }
 
   return (
     <div>
@@ -94,4 +127,42 @@ export default function AddExpense() {
       </main>
     </div>
   );
+}
+
+function createDefaultTags(db) {
+  db.add('expenseTags', {
+    name: 'Standard',
+    translation: 'expenseTagStandard'
+  });
+  db.add('expenseTags', {
+    name: 'Unexpected',
+    translation: 'expenseTagUnexpected'
+  });
+  db.add('expenseTags', {
+    name: 'Recurrent',
+    translation: 'expenseTagRecurrent'
+  });
+
+  return db.get('expenseTags');
+}
+
+function createDefaultTypes(db) {
+  db.add('expenseTypes', {
+    name: 'Fast Food',
+    translation: 'expenseTypeFastFood'
+  });
+  db.add('expenseTypes', {
+    name: 'Groceries',
+    translation: 'expenseTypeGroceries'
+  });
+  db.add('expenseTypes', {
+    name: 'Transport',
+    translation: 'expenseTypeTransport'
+  });
+  db.add('expenseTypes', {
+    name: 'Bill',
+    translation: 'expenseTypeBill'
+  });
+
+  return db.get('expenseTypes');
 }
