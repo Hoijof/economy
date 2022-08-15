@@ -1,13 +1,8 @@
 import React, { useState, useCallback } from "react";
-// @ts-ignore
-import Head from "next/head";
-// @ts-ignore
-import Image from "next/image";
 
 import {
     Typography,
     Grid,
-    Button,
     IconButton,
     FormControl,
     InputLabel,
@@ -29,7 +24,7 @@ export function ExpenseTypeSelector({ type, onChange, options}) {
     }, []);
 
     const handleChangeType = useCallback(
-        (event: React.ChangeEvent<{ value: string }>) => {
+        (event) => {
             onChange(event.target.value as string);
         },
         [onChange]
