@@ -1,7 +1,10 @@
 import React from "react";
+// @ts-ignore
 import Head from "next/head";
+// @ts-ignore
 import Image from "next/image";
 
+// @ts-ignore
 import { Typography, Grid, Button } from "@mui/material";
 
 import createDb from "../utils/db";
