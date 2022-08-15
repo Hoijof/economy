@@ -1,0 +1,18 @@
+{
+    "en": {
+        "delete": "Delete",
+        "addExpenseTitle": "Add Expense",
+        "addExpenseType": "Type",
+        "addExpenseAmount": "Amount",
+        "addExpenseDate": "Date",
+        "addExpenseCTA": "Add Expense"
+    },
+    "es": {
+        "delete": "Borrar",
+        "addExpenseTitle": "Añadir Gasto",
+        "addExpenseType": "Tipo",
+        "addExpenseAmount": "Cantidad",
+        "addExpenseDate": "Fecha",
+        "addExpenseCTA": "Añadir Gasto"
+    }
+}
