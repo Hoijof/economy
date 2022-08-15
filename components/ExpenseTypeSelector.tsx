@@ -16,7 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 import useTranslation from "../hooks/useTranslation";
 
-export function ExpenseTypeSelector({ type, onChange, options}) {
+export function ExpenseTypeSelector({ type, onChange, options }) {
     const [t] = useTranslation();
 
     const handleClickType = useCallback(() => {
@@ -39,14 +39,16 @@ export function ExpenseTypeSelector({ type, onChange, options}) {
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <IconButton aria-label="delete" onClick={handleClickType}>
+                    <IconButton aria-label="add" onClick={handleClickType}>
                         <AddIcon />
                     </IconButton>
                 </Grid>
             </Grid>
             <Grid item>
                 <FormControl fullWidth>
-                    <InputLabel id="add-expense-label">{t["addExpenseType"]}</InputLabel>
+                    <InputLabel id="add-expense-label">
+                        {t["addExpenseType"]}
+                    </InputLabel>
                     <Select
                         labelId="add-expense-label"
                         id="add-expense"

@@ -5,7 +5,8 @@
         "addExpenseType": "Type",
         "addExpenseAmount": "Amount",
         "addExpenseDate": "Date",
-        "addExpenseCTA": "Add Expense"
+        "addExpenseCTA": "Add Expense",
+        "dateFormat": "MM/DD/YYYY"
     },
     "es": {
         "delete": "Borrar",
@@ -13,6 +14,7 @@
         "addExpenseType": "Tipo",
         "addExpenseAmount": "Cantidad",
         "addExpenseDate": "Fecha",
-        "addExpenseCTA": "Añadir Gasto"
+        "addExpenseCTA": "Añadir Gasto",
+        "dateFormat": "DD/MM/YYYY"
     }
 }

@@ -48,7 +48,7 @@ export function ExpenseQuantitySelector({ value, onChange }) {
                         onBlur={handleBlur}
                         inputProps={{
                             step: 1,
-                            min: 0,
+                            min: 1,
                             max: 100,
                             type: "number",
                             "aria-labelledby": "input-slider",

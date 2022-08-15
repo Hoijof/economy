@@ -2,15 +2,14 @@ import React from "react";
 // @ts-ignore
 import Head from "next/head";
 // @ts-ignore
-import Image from "next/image";
-
+import dayjs from "dayjs";
 import {
     Typography,
     Grid,
     IconButton,
     Card,
     CardContent,
-// @ts-ignore
+    // @ts-ignore
 } from "@mui/material";
 
 // @ts-ignore
@@ -45,7 +44,7 @@ export default function Home() {
                     This is the summary of the economy.
                 </Typography>
                 <Grid container direction="column">
-                    {expenses.map(({ quantity, type, __id }) => (
+                    {expenses.map(({ quantity, type, date, __id }) => (
                         <Card key={__id} sx={{ margin: 2 }}>
                             <CardContent>
                                 <Grid container direction="row">
@@ -58,7 +57,11 @@ export default function Home() {
                                             {quantity}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={6} sx={{textAlign: 'right'}}>
+                                    <Grid
+                                        item
+                                        xs={3}
+                                        sx={{ textAlign: "right" }}
+                                    >
                                         <Typography
                                             variant="body2"
                                             color="text.secondary"
@@ -66,11 +69,25 @@ export default function Home() {
                                             {type}
                                         </Typography>
                                     </Grid>
+                                    <Grid
+                                        item
+                                        xs={3}
+                                        sx={{ textAlign: "right" }}
+                                    >
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                        >
+                                            {dayjs(date).format(
+                                                t["dateFormat"]
+                                            )}
+                                        </Typography>
+                                    </Grid>
                                     <Grid item xs={2}>
-                                    <IconButton size="small">
-                                    <DeleteIcon />
-                                </IconButton>
-                                </Grid>
+                                        <IconButton size="small">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Grid>
                                 </Grid>
                             </CardContent>
                         </Card>
