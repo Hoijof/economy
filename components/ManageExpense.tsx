@@ -18,13 +18,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import useDb from "../hooks/useDb";
 import useTranslation from "../hooks/useTranslation";
 
-import { ExpenseTypeSelector } from "./../components/ExpenseTypeSelector";
-import { ExpenseQuantitySelector } from "../components/ExpenseQuantitySelector";
+import { ExpenseTypeSelector } from "./ExpenseTypeSelector";
+import { ExpenseQuantitySelector } from "./ExpenseQuantitySelector";
 import { createExpense } from "../utils/factories";
-import { ExpenseDateSelector } from "../components/ExpenseDateSelector";
-import { ExpenseTagSelector } from "../components/ExpenseTagSelector";
+import { ExpenseDateSelector } from "./ExpenseDateSelector";
+import { ExpenseTagSelector } from "./ExpenseTagSelector";
 
-export default function AddExpense() {
+export default function ManageExpense({expenseId = null}) {
   const db = useDb("economy");
   const [t] = useTranslation();
   const router = useRouter();
@@ -36,6 +36,22 @@ export default function AddExpense() {
   const [quantity, setQuantity] = useState(50);
   const [date, setDate] = useState(new Date());
   const [tags, setTags] = useState([]);
+
+  React.useEffect(() => {
+    if (expenseId && db) {
+      const expense = db.get("expenses", expenseId);
+
+      if (!expense) {
+        throw new Error(`Expense with id ${expenseId} not found`);
+      }
+
+      const {type, quantity, date, tags} = expense;
+      setType(type);
+      setQuantity(quantity);
+      setDate(new Date(date));
+      setTags(tags);
+    }
+  }, [db, expenseId]);
 
   React.useEffect(() => {
     if (db) {
@@ -63,11 +79,19 @@ export default function AddExpense() {
 
   const handleAddExpense = useCallback(() => {
     if (db) {
-      db.add("expenses", createExpense(quantity, type, date, tags));
-
+      if (expenseId) {
+        db.update('expenses', expenseId, {
+          type,
+          quantity,
+          date,
+          tags
+        });
+      } else {
+        db.add("expenses", createExpense(quantity, type, date, tags));
+      }
       router.push('/')
     }
-  }, [db, quantity, type, date, tags, router]);
+  }, [db, expenseId, router, type, quantity, date, tags]);
 
   if (!db || tagOptions.length === 0 || typeOptions.length === 0) {
     return null;
@@ -114,7 +138,7 @@ export default function AddExpense() {
               color="primary"
               onClick={handleAddExpense}
             >
-              {t["addExpenseCTA"]}
+              {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
             </Button>
           </Grid>
           <ExpenseDateSelector value={date} onChange={setDate} />

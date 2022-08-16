@@ -69,45 +69,50 @@ export default function Home() {
             <Typography variant="body1">Expenses</Typography>
           </Grid>
           <Grid item xs={2} sx={{ textAlign: "right" }}>
-            <Link href="/addExpense">
-              <AddIcon sx={{ fontSize: 35 }} />
+            <Link href="/expenses">
+              <AddIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
             </Link>
           </Grid>
         </Grid>
 
         <Grid container direction="column">
           {expenses.map(({ id, quantity, type, date, tags }) => (
-            <Card key={id} sx={{ margin: 2 }}>
-              <CardContent>
-                <Grid container direction="row">
-                  <Grid item xs={2}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {quantity}
-                    </Typography>
+            <Link href={`/expenses/${id}`} key={id}>
+              <Card key={id} sx={{ margin: 2, cursor: 'pointer' }}>
+                <CardContent>
+                  <Grid container direction="row">
+                    <Grid item xs={2}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {quantity}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="body2" color="text.secondary">
+                        {getTypeName(type)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="body2" color="text.secondary">
+                        {dayjs(date).format(t["dateFormat"])}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="body2">
+                        {t["addExpenseTags"]}: {tags.length}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={1} sx={{ textAlign: "right" }}>
+                      <IconButton size="small" onClick={(e) => {
+                        deleteExpense(id)
+                        e.stopPropagation();
+                      }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2" color="text.secondary">
-                      {getTypeName(type)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2" color="text.secondary">
-                      {dayjs(date).format(t["dateFormat"])}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t["addExpenseTags"]}: {tags.length}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1} sx={{ textAlign: "right" }}>
-                    <IconButton size="small" onClick={() => {deleteExpense(id)}}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </Grid>
       </main>

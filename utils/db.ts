@@ -28,7 +28,7 @@ export default function db(namespace) {
             `db.get('users', 1);` `users.get(1);` // Get by id
             `db.get('users', 'name', 'pepito')`
         **/
-    getForced: (collection, id: any, specific) => {
+    getForced: (collection: string, id: number | string, specific: string) => {
       sn.__totalReads++;
 
       const mode = getMode(collection, id, specific);
