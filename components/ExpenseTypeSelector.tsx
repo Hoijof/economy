@@ -24,7 +24,7 @@ export function ExpenseTypeSelector({ type, onChange, options, reloadTypes }) {
 
   const handleClickType = useCallback(() => {
     open(<PopupAdd collectionName="expenseTypes" title={t["addExpenseTypesNew"]} buttonText={t["WordAdd"]} documentField="name" onClose={() => {close(); reloadTypes();}}/>);
-  }, [close, open, t]);
+  }, [close, open, reloadTypes, t]);
 
   const handleChangeType = useCallback(
     (event) => {
@@ -36,12 +36,14 @@ export function ExpenseTypeSelector({ type, onChange, options, reloadTypes }) {
   return (
     <>
       <Grid item container>
-        <Grid item xs={10}>
+        <Grid container item xs={10} sx={{
+          alignItems: "center"
+        }}>
           <Typography variant="body1">
             {t["addExpenseType"]}
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'end'}}>
           <IconButton aria-label="add" onClick={handleClickType}>
             <AddIcon />
           </IconButton>

@@ -41,12 +41,14 @@ export function ExpenseTagSelector({ tags, onChange, options, reloadTags }) {
   return (
     <>
       <Grid item container>
-        <Grid item xs={10}>
+        <Grid item xs={10} sx={{
+          display: 'flex', alignItems: 'center'
+        }}>
           <Typography variant="body1">
             {t["addExpenseTags"]}
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'end'}}>
           <IconButton aria-label="add" onClick={handleClickType}>
             <AddIcon />
           </IconButton>

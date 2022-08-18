@@ -127,14 +127,18 @@ export default function ManageExpense({expenseId = null}) {
       >
         <Grid container spacing={3} direction="column">
           <Grid container item>
-            <Grid item xs={2}>
+            <Grid item xs={2} sx={{
+              position: "absolute"
+            }}>
               <Link href="/">
-                <HomeIcon sx={{ fontSize: 35 }} />
+                <HomeIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
               </Link>
             </Grid>
-            <Grid item xs>
-              <Typography variant="h4">
-                {t["addExpenseTitle"]}
+            <Grid item xs={12} sx={{alignItems: 'center'}}>
+              <Typography variant="h4" sx={{
+                textAlign: "center"
+              }}>
+                {expenseId ? t["editExpenseCTA"] : t["addExpenseTitle"]}
               </Typography>
             </Grid>
           </Grid>
@@ -153,6 +157,7 @@ export default function ManageExpense({expenseId = null}) {
               variant="contained"
               color="primary"
               onClick={handleAddExpense}
+              sx={{width: '100%'}}
             >
               {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
             </Button>

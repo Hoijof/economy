@@ -22,18 +22,14 @@ export function ExpenseQuantitySelector({ value, onChange }) {
 
   return (
     <>
-      <Grid item>
-        <Typography variant="body1">{t["addExpenseType"]}</Typography>
-      </Grid>
-      <Grid item container spacing={2} alignItems="center">
-        <Grid item xs>
-          <Slider
-            value={typeof value === "number" ? value : 0}
-            onChange={handleSliderChange}
-            aria-labelledby="input-slider"
-          />
+      <Grid container item>
+        <Grid item xs={10} sx={{
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Typography variant="body1">{t["addExpenseAmount"]}</Typography>
         </Grid>
-        <Grid item>
+        <Grid item xs={2}>
           <Input
             value={value}
             onChange={handleInputChange}
@@ -43,6 +39,18 @@ export function ExpenseQuantitySelector({ value, onChange }) {
               max: 100,
               type: "number",
               "aria-labelledby": "input-slider",
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid item container spacing={2} alignItems="center">
+        <Grid item xs>
+          <Slider
+            value={typeof value === "number" ? value : 0}
+            onChange={handleSliderChange}
+            aria-labelledby="input-slider"
+            sx={{
+              height: '10px',
             }}
           />
         </Grid>
