@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 // @ts-ignore
-import Head from "next/head";
+import Head from 'next/head';
 // @ts-ignore
-import Link from "next/link";
+import Link from 'next/link';
 // @ts-ignore
 import { useRouter } from 'next/router';
 
@@ -11,21 +11,21 @@ import {
   Grid,
   Button,
   // @ts-ignore
-} from "@mui/material";
+} from '@mui/material';
 // @ts-ignore
-import HomeIcon from "@mui/icons-material/Home";
+import HomeIcon from '@mui/icons-material/Home';
 
-import useDb from "../hooks/useDb";
-import useTranslation from "../hooks/useTranslation";
+import useDb from '../hooks/useDb';
+import useTranslation from '../hooks/useTranslation';
 
-import { ExpenseTypeSelector } from "./ExpenseTypeSelector";
-import { ExpenseQuantitySelector } from "./ExpenseQuantitySelector";
-import { createExpense } from "../utils/factories";
-import { ExpenseDateSelector } from "./ExpenseDateSelector";
-import { ExpenseTagSelector } from "./ExpenseTagSelector";
+import { ExpenseTypeSelector } from './ExpenseTypeSelector';
+import { ExpenseQuantitySelector } from './ExpenseQuantitySelector';
+import { createExpense } from '../utils/factories';
+import { ExpenseDateSelector } from './ExpenseDateSelector';
+import { ExpenseTagSelector } from './ExpenseTagSelector';
 
-export default function ManageExpense({expenseId = null}) {
-  const db = useDb("economy");
+export default function ManageExpense({ expenseId = null }) {
+  const db = useDb('economy');
   const [t] = useTranslation();
   const router = useRouter();
 
@@ -39,13 +39,13 @@ export default function ManageExpense({expenseId = null}) {
 
   React.useEffect(() => {
     if (expenseId && db) {
-      const expense = db.get("expenses", expenseId);
+      const expense = db.get('expenses', expenseId);
 
       if (!expense) {
         throw new Error(`Expense with id ${expenseId} not found`);
       }
 
-      const {type, quantity, date, tags} = expense;
+      const { type, quantity, date, tags } = expense;
       setType(type);
       setQuantity(quantity);
       setDate(new Date(date));
@@ -64,20 +64,20 @@ export default function ManageExpense({expenseId = null}) {
 
       setTagOptions(tags);
     }
-  } , [db]);
+  }, [db]);
 
   // Get all types from the database
   React.useEffect(() => {
     if (db) {
       let types = db.get('expenseTypes');
-      
+
       if (types.length === 0) {
         types = createDefaultTypes(db);
       }
 
       setTypeOptions(types);
     }
-  } , [db]);
+  }, [db]);
 
   // Handle create or edit of the expense
   const handleAddExpense = useCallback(() => {
@@ -87,12 +87,12 @@ export default function ManageExpense({expenseId = null}) {
           type,
           quantity,
           date,
-          tags
+          tags,
         });
       } else {
-        db.add("expenses", createExpense(quantity, type, date, tags));
+        db.add('expenses', createExpense(quantity, type, date, tags));
       }
-      router.push('/')
+      router.push('/');
     }
   }, [db, expenseId, router, type, quantity, date, tags]);
 
@@ -100,13 +100,13 @@ export default function ManageExpense({expenseId = null}) {
     if (db) {
       setTagOptions(db.get('expenseTags'));
     }
-  } , [db]);
+  }, [db]);
 
   const reloadTypes = useCallback(() => {
     if (db) {
       setTypeOptions(db.get('expenseTypes'));
     }
-  } , [db]);
+  }, [db]);
 
   if (!db || tagOptions.length === 0 || typeOptions.length === 0) {
     return null;
@@ -122,23 +122,30 @@ export default function ManageExpense({expenseId = null}) {
 
       <main
         style={{
-          padding: "1rem",
+          padding: '1rem',
         }}
       >
         <Grid container spacing={3} direction="column">
           <Grid container item>
-            <Grid item xs={2} sx={{
-              position: "absolute"
-            }}>
+            <Grid
+              item
+              xs={2}
+              sx={{
+                position: 'absolute',
+              }}
+            >
               <Link href="/">
                 <HomeIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
               </Link>
             </Grid>
-            <Grid item xs={12} sx={{alignItems: 'center'}}>
-              <Typography variant="h4" sx={{
-                textAlign: "center"
-              }}>
-                {expenseId ? t["editExpenseCTA"] : t["addExpenseTitle"]}
+            <Grid item xs={12} sx={{ alignItems: 'center' }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  textAlign: 'center',
+                }}
+              >
+                {expenseId ? t['editExpenseCTA'] : t['addExpenseTitle']}
               </Typography>
             </Grid>
           </Grid>
@@ -148,16 +155,13 @@ export default function ManageExpense({expenseId = null}) {
             options={typeOptions}
             reloadTypes={reloadTypes}
           />
-          <ExpenseQuantitySelector
-            value={quantity}
-            onChange={setQuantity}
-          />
+          <ExpenseQuantitySelector value={quantity} onChange={setQuantity} />
           <Grid item>
             <Button
               variant="contained"
               color="primary"
               onClick={handleAddExpense}
-              sx={{width: '100%'}}
+              sx={{ width: '100%' }}
             >
               {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
             </Button>
@@ -178,15 +182,15 @@ export default function ManageExpense({expenseId = null}) {
 function createDefaultTags(db) {
   db.add('expenseTags', {
     name: 'Standard',
-    translation: 'expenseTagStandard'
+    translation: 'expenseTagStandard',
   });
   db.add('expenseTags', {
     name: 'Unexpected',
-    translation: 'expenseTagUnexpected'
+    translation: 'expenseTagUnexpected',
   });
   db.add('expenseTags', {
     name: 'Recurrent',
-    translation: 'expenseTagRecurrent'
+    translation: 'expenseTagRecurrent',
   });
 
   return db.get('expenseTags');
@@ -195,19 +199,19 @@ function createDefaultTags(db) {
 function createDefaultTypes(db) {
   db.add('expenseTypes', {
     name: 'Fast Food',
-    translation: 'expenseTypeFastFood'
+    translation: 'expenseTypeFastFood',
   });
   db.add('expenseTypes', {
     name: 'Groceries',
-    translation: 'expenseTypeGroceries'
+    translation: 'expenseTypeGroceries',
   });
   db.add('expenseTypes', {
     name: 'Transport',
-    translation: 'expenseTypeTransport'
+    translation: 'expenseTypeTransport',
   });
   db.add('expenseTypes', {
     name: 'Bill',
-    translation: 'expenseTypeBill'
+    translation: 'expenseTypeBill',
   });
 
   return db.get('expenseTypes');

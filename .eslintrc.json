@@ -1,6 +1,21 @@
 {
   "extends": "next/core-web-vitals",
+  "plugins": [
+    "react",
+    "react-hooks",
+    "prettier"
+  ],
   "rules": {
-    "indent": ["error", 2]
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      },
+      {
+        "usePrettierrc": true
+      }
+    ],
+    "indent": ["error", 2],
+    "max-len": ["error", { "code": 80 }]
   }
 }

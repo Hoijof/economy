@@ -4,18 +4,22 @@ import {
   Grid,
   Button,
   // @ts-ignore
-} from "@mui/material";
+} from '@mui/material';
 
-
-import useTranslation from "../../hooks/useTranslation";
+import useTranslation from '../../hooks/useTranslation';
 import { PopupHeader } from './PopupHeader';
-import useDb from "../../hooks/useDb";
+import useDb from '../../hooks/useDb';
 
-
-export function PopupAdd({onClose, collectionName, title, buttonText, documentField}) {
+export function PopupAdd({
+  onClose,
+  collectionName,
+  title,
+  buttonText,
+  documentField,
+}) {
   const [t] = useTranslation();
-  const db = useDb("economy");
-  const [tagName, setTagName] = useState("");
+  const db = useDb('economy');
+  const [tagName, setTagName] = useState('');
 
   const addTag = useCallback(() => {
     if (!db) {
@@ -23,9 +27,9 @@ export function PopupAdd({onClose, collectionName, title, buttonText, documentFi
     }
 
     const tag = db.get(collectionName, documentField, tagName);
-    
+
     if (!tag) {
-      db.add(collectionName, {name: tagName});
+      db.add(collectionName, { name: tagName });
     }
 
     onClose();
@@ -37,9 +41,13 @@ export function PopupAdd({onClose, collectionName, title, buttonText, documentFi
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="body1">
-            <input type="text" value={tagName} onChange={(e) => {
-              setTagName(e.target.value);
-            }} />
+            <input
+              type="text"
+              value={tagName}
+              onChange={(e) => {
+                setTagName(e.target.value);
+              }}
+            />
           </Typography>
         </Grid>
         <Grid item xs={12}>

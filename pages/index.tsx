@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 // @ts-ignore
-import Head from "next/head";
+import Head from 'next/head';
 // @ts-ignore
-import Link from "next/link";
+import Link from 'next/link';
 // @ts-ignore
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   Typography,
   Grid,
@@ -12,46 +12,52 @@ import {
   Card,
   CardContent,
   // @ts-ignore
-} from "@mui/material";
+} from '@mui/material';
 // @ts-ignore
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 
 // @ts-ignore
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import useDb from "../hooks/useDb";
-import useTranslation from "../hooks/useTranslation";
+import useDb from '../hooks/useDb';
+import useTranslation from '../hooks/useTranslation';
 
 export default function Home() {
-  const db = useDb("economy");
+  const db = useDb('economy');
   const [t] = useTranslation();
 
   const [expenses, setExpenses] = React.useState([]);
 
   React.useEffect(() => {
     if (db) {
-      setExpenses(db.get("expenses") as Expense[]);
+      setExpenses(db.get('expenses') as Expense[]);
     }
   }, [db]);
 
-  const getTypeName = useCallback((typeId: number) => {
-    if (!db) {
-      return;
-    }
+  const getTypeName = useCallback(
+    (typeId: number) => {
+      if (!db) {
+        return;
+      }
 
-    const { name, translation} = db.get('expenseTypes', typeId);
+      const { name, translation } = db.get('expenseTypes', typeId);
 
-    return translation ? t[translation] : name;
-  }, [db, t]);
+      return translation ? t[translation] : name;
+    },
+    [db, t],
+  );
 
-  const deleteExpense = useCallback((id: number) => {
-    if (!db) {
-      return;
-    }
+  const deleteExpense = useCallback(
+    (id: number) => {
+      if (!db) {
+        return;
+      }
 
-    db.delete("expenses", id);
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  } , [db, expenses]);
+      db.delete('expenses', id);
+      setExpenses(expenses.filter((expense) => expense.id !== id));
+    },
+    [db, expenses],
+  );
 
   return (
     <div>
@@ -68,7 +74,7 @@ export default function Home() {
           <Grid item xs>
             <Typography variant="body1">Expenses</Typography>
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: "right" }}>
+          <Grid item xs={2} sx={{ textAlign: 'right' }}>
             <Link href="/expenses">
               <AddIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
             </Link>
@@ -93,19 +99,22 @@ export default function Home() {
                     </Grid>
                     <Grid item xs={3}>
                       <Typography variant="body2" color="text.secondary">
-                        {dayjs(date).format(t["dateFormat"])}
+                        {dayjs(date).format(t['dateFormat'])}
                       </Typography>
                     </Grid>
                     <Grid item xs={3}>
                       <Typography variant="body2">
-                        {t["addExpenseTags"]}: {tags.length}
+                        {t['addExpenseTags']}: {tags.length}
                       </Typography>
                     </Grid>
-                    <Grid item xs={1} sx={{ textAlign: "right" }}>
-                      <IconButton size="small" onClick={(e) => {
-                        deleteExpense(id)
-                        e.stopPropagation();
-                      }}>
+                    <Grid item xs={1} sx={{ textAlign: 'right' }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          deleteExpense(id);
+                          e.stopPropagation();
+                        }}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </Grid>

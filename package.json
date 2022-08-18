@@ -25,6 +25,7 @@
     "@types/node": "^18.7.4",
     "@types/react": "^17.0.48",
     "eslint": "8.22.0",
-    "eslint-config-next": "12.2.5"
+    "eslint-config-next": "12.2.5",
+    "eslint-plugin-prettier": "^4.2.1"
   }
 }

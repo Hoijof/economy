@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext } from 'react';
 
 import {
   Typography,
@@ -6,21 +6,32 @@ import {
   IconButton,
   MenuItem,
   // @ts-ignore
-} from "@mui/material"; // @ts-ignore
+} from '@mui/material'; // @ts-ignore
 
 // @ts-ignore
-import AddIcon from "@mui/icons-material/Add";
+import AddIcon from '@mui/icons-material/Add';
 
-import useTranslation from "../hooks/useTranslation";
-import { ProviderContext } from "./Popup/PopupProvider";
-import { PopupAdd } from "./Popup/PopupAdd";
+import useTranslation from '../hooks/useTranslation';
+import { ProviderContext } from './Popup/PopupProvider';
+import { PopupAdd } from './Popup/PopupAdd';
 
 export function ExpenseTagSelector({ tags, onChange, options, reloadTags }) {
   const [t] = useTranslation();
   const { open, close } = useContext(ProviderContext);
 
   const handleClickType = useCallback(() => {
-    open(<PopupAdd collectionName="expenseTags" title={t["addExpenseTagsNew"]} buttonText={t["WordAdd"]} documentField="name" onClose={() => {close(); reloadTags();}}/>);
+    open(
+      <PopupAdd
+        collectionName="expenseTags"
+        title={t['addExpenseTagsNew']}
+        buttonText={t['WordAdd']}
+        documentField="name"
+        onClose={() => {
+          close();
+          reloadTags();
+        }}
+      />,
+    );
   }, [close, open, reloadTags, t]);
 
   const handleChangeTag = useCallback(
@@ -35,27 +46,30 @@ export function ExpenseTagSelector({ tags, onChange, options, reloadTags }) {
 
       onChange([...tags, id]);
     },
-    [onChange, tags]
+    [onChange, tags],
   );
 
   return (
     <>
       <Grid item container>
-        <Grid item xs={10} sx={{
-          display: 'flex', alignItems: 'center'
-        }}>
-          <Typography variant="body1">
-            {t["addExpenseTags"]}
-          </Typography>
+        <Grid
+          item
+          xs={10}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="body1">{t['addExpenseTags']}</Typography>
         </Grid>
-        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'end'}}>
+        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'end' }}>
           <IconButton aria-label="add" onClick={handleClickType}>
             <AddIcon />
           </IconButton>
         </Grid>
       </Grid>
       <Grid container item spacing={1}>
-        {options.map(({id, name, translation}) => (
+        {options.map(({ id, name, translation }) => (
           <Grid item xs={6} key={id}>
             <MenuItem
               value={id}
