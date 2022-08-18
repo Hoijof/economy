@@ -1,19 +1,15 @@
 import React, { useState, useCallback } from 'react';
 // @ts-ignore
 import Head from 'next/head';
-// @ts-ignore
-import Link from 'next/link';
+
 // @ts-ignore
 import { useRouter } from 'next/router';
 
 import {
-  Typography,
   Grid,
   Button,
   // @ts-ignore
 } from '@mui/material';
-// @ts-ignore
-import HomeIcon from '@mui/icons-material/Home';
 
 import useDb from '../hooks/useDb';
 import useTranslation from '../hooks/useTranslation';
@@ -113,69 +109,38 @@ export default function ManageExpense({ expenseId = null }) {
   }
 
   return (
-    <div>
+    <>
       <Head>
-        <title>Summary</title>
+        <title>{expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}</title>
         <meta name="description" content="General summary of Economy" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main
-        style={{
-          padding: '1rem',
-        }}
-      >
-        <Grid container spacing={3} direction="column">
-          <Grid container item>
-            <Grid
-              item
-              xs={2}
-              sx={{
-                position: 'absolute',
-              }}
-            >
-              <Link href="/">
-                <HomeIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
-              </Link>
-            </Grid>
-            <Grid item xs={12} sx={{ alignItems: 'center' }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  textAlign: 'center',
-                }}
-              >
-                {expenseId ? t['editExpenseCTA'] : t['addExpenseTitle']}
-              </Typography>
-            </Grid>
-          </Grid>
-          <ExpenseTypeSelector
-            type={type}
-            onChange={setType}
-            options={typeOptions}
-            reloadTypes={reloadTypes}
-          />
-          <ExpenseQuantitySelector value={quantity} onChange={setQuantity} />
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddExpense}
-              sx={{ width: '100%' }}
-            >
-              {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
-            </Button>
-          </Grid>
-          <ExpenseDateSelector value={date} onChange={setDate} />
-          <ExpenseTagSelector
-            tags={tags}
-            onChange={setTags}
-            options={tagOptions}
-            reloadTags={reloadTags}
-          />
-        </Grid>
-      </main>
-    </div>
+      <ExpenseTypeSelector
+        type={type}
+        onChange={setType}
+        options={typeOptions}
+        reloadTypes={reloadTypes}
+      />
+      <ExpenseQuantitySelector value={quantity} onChange={setQuantity} />
+      <Grid item>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddExpense}
+          sx={{ width: '100%' }}
+        >
+          {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
+        </Button>
+      </Grid>
+      <ExpenseDateSelector value={date} onChange={setDate} />
+      <ExpenseTagSelector
+        tags={tags}
+        onChange={setTags}
+        options={tagOptions}
+        reloadTags={reloadTags}
+      />
+    </>
   );
 }
 

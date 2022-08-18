@@ -1,7 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@mui/material/styles';
+// @ts-ignore
+import Link from 'next/link';
+// @ts-ignore
+import HomeIcon from '@mui/icons-material/Home';
+import {
+  Typography,
+  Grid,
+  // @ts-ignore
+} from '@mui/material';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../theme';
 import { PopupProvider } from '../components/Popup/PopupProvider';
@@ -20,7 +30,7 @@ export default function MyApp(props) {
   return (
     <React.Fragment>
       <Head>
-        <title>Economy.js</title>
+        <title>{Component.name}</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -29,7 +39,38 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         <PopupProvider>
           <CssBaseline />
-          <Component {...pageProps} />
+          <main
+            style={{
+              padding: '1rem',
+            }}
+          >
+            <Grid container spacing={3} direction="column">
+              <Grid container item>
+                <Grid
+                  item
+                  xs={2}
+                  sx={{
+                    position: 'absolute',
+                  }}
+                >
+                  <Link href="/">
+                    <HomeIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
+                  </Link>
+                </Grid>
+                <Grid item xs={12} sx={{ alignItems: 'center' }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    {Component.name}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Component {...pageProps} />
+            </Grid>
+          </main>
         </PopupProvider>
       </ThemeProvider>
     </React.Fragment>
