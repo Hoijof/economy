@@ -13,8 +13,6 @@ import {
   CardContent,
   // @ts-ignore
 } from '@mui/material';
-// @ts-ignore
-import AddIcon from '@mui/icons-material/Add';
 
 // @ts-ignore
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -66,17 +64,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Grid container item>
-        <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body1">Expenses</Typography>
-        </Grid>
-        <Grid item xs={2} sx={{ textAlign: 'right' }}>
-          <Link href="/expenses">
-            <AddIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
-          </Link>
-        </Grid>
+      <Grid item>
+        <Link href="/summary">
+          <Typography variant="h4">{t['summary']}</Typography>
+        </Link>
       </Grid>
-
       <Grid container item direction="column">
         {expenses.map(({ id, quantity, type, date, tags }) => (
           <Link href={`/expenses/${id}`} key={id}>

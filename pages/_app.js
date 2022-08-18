@@ -6,6 +6,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import Link from 'next/link';
 // @ts-ignore
 import HomeIcon from '@mui/icons-material/Home';
+// @ts-ignore
+import AddIcon from '@mui/icons-material/Add';
+
 import {
   Typography,
   Grid,
@@ -44,20 +47,14 @@ export default function MyApp(props) {
               padding: '1rem',
             }}
           >
-            <Grid container spacing={3} direction="column">
-              <Grid container item>
-                <Grid
-                  item
-                  xs={2}
-                  sx={{
-                    position: 'absolute',
-                  }}
-                >
+            <Grid container spacing={2} sx={{ width: '100%' }}>
+              <Grid container item sx={{ alignItems: 'center' }}>
+                <Grid item xs={2}>
                   <Link href="/">
                     <HomeIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
                   </Link>
                 </Grid>
-                <Grid item xs={12} sx={{ alignItems: 'center' }}>
+                <Grid item xs sx={{ alignItems: 'center' }}>
                   <Typography
                     variant="h4"
                     sx={{
@@ -66,6 +63,15 @@ export default function MyApp(props) {
                   >
                     {Component.name}
                   </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  sx={{ display: 'flex', justifyContent: 'end' }}
+                >
+                  <Link href="/expenses">
+                    <AddIcon sx={{ fontSize: 35, cursor: 'pointer' }} />
+                  </Link>
                 </Grid>
               </Grid>
               <Component {...pageProps} />

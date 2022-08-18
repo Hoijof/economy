@@ -21,7 +21,8 @@
         "expenseTypeFastFood": "Fast Food",
         "expenseTypeGroceries": "Groceries",
         "expenseTypeTransport": "Transport",
-        "expenseTypeBill": "Bill"
+        "expenseTypeBill": "Bill",
+        "summary": "Summary"
     },
     "es": {
         "delete": "Borrar",
@@ -45,6 +46,7 @@
         "expenseTypeFastFood": "Comida rápida",
         "expenseTypeGroceries": "Comida",
         "expenseTypeTransport": "Transporte",
-        "expenseTypeBill": "Factura"
+        "expenseTypeBill": "Factura",
+        "summary": "Resumen"
     }
 }

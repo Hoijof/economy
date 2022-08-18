@@ -1,4 +1,4 @@
-import { debug } from "./consts";
+import { debug } from './consts';
 
 let dbs = null;
 
@@ -6,7 +6,7 @@ const cache = {};
 
 export default function db(namespace) {
   if (!dbs) {
-    dbs = JSON.parse(localStorage.getItem("customDBs")) || {};
+    dbs = JSON.parse(localStorage.getItem('customDBs')) || {};
   }
 
   if (!dbs[namespace]) {
@@ -120,16 +120,16 @@ export default function db(namespace) {
       if (document) {
         if (id) {
           cache[term] = document;
-          debug && console.info("get", term, "set cache");
+          debug && console.info('get', term, 'set cache');
         } else {
-          debug && console.info("get", term, "avoid caching");
+          debug && console.info('get', term, 'avoid caching');
         }
-        
+
         result = document;
       }
     }
 
-    debug && console.info("get", term, cache[term] && cache[term].__id);
+    debug && console.info('get', term, cache[term] && cache[term].__id);
 
     return result;
   };
@@ -137,7 +137,7 @@ export default function db(namespace) {
   return res;
 }
 
-function getMode(collection, id, specific = ""): GetModes {
+function getMode(collection, id, specific = ''): GetModes {
   if (specific) {
     return GetModes.SPECIFIC;
   }
@@ -155,14 +155,14 @@ enum GetModes {
   SPECIFIC,
 }
 
-function generateCacheKey(collection, id, specific = "") {
+function generateCacheKey(collection, id, specific = '') {
   return `${collection}_${id}_${specific}`;
 }
 
 function saveDBs() {
-  console.info("saving");
+  console.info('saving');
 
-  localStorage.setItem("customDBs", JSON.stringify(dbs));
+  localStorage.setItem('customDBs', JSON.stringify(dbs));
 }
 
 function createCollection(sn, collection) {
