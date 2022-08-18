@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 
 import {
   Typography,
@@ -15,13 +15,16 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 
 import useTranslation from "../hooks/useTranslation";
+import { PopupAdd } from "./Popup/PopupAdd";
+import { ProviderContext } from "./Popup/PopupProvider";
 
-export function ExpenseTypeSelector({ type, onChange, options }) {
+export function ExpenseTypeSelector({ type, onChange, options, reloadTypes }) {
   const [t] = useTranslation();
+  const { open, close } = useContext(ProviderContext);
 
   const handleClickType = useCallback(() => {
-    console.warn("handleClickType not yet impelemented");
-  }, []);
+    open(<PopupAdd collectionName="expenseTypes" title={t["addExpenseTypesNew"]} buttonText={t["WordAdd"]} documentField="name" onClose={() => {close(); reloadTypes();}}/>);
+  }, [close, open, t]);
 
   const handleChangeType = useCallback(
     (event) => {

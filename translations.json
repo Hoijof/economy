@@ -8,8 +8,11 @@
         "addExpenseCTA": "Add Expense",
         "editExpenseCTA": "Edit Expense",
         "addExpenseTags": "Tags",
+        "addExpenseTagsNew": "New Tag",
         "dateFormat": "MM/DD/YYYY",
         "home": "Home",
+
+        "WordAdd": "Add",
 
         "expenseTagStandard": "Standard",
         "expenseTagUnexpected": "Unexpected",
@@ -29,8 +32,11 @@
         "addExpenseCTA": "Añadir Gasto",
         "editExpenseCTA": "Editar Gasto",
         "addExpenseTags": "Etiquetas",
+        "addExpenseTagsNew": "Nueva Etiqueta",
         "dateFormat": "DD/MM/YYYY",
         "home": "Inicio",
+
+        "WordAdd": "Añadir",
 
         "expenseTagStandard": "Estándar",
         "expenseTagUnexpected": "Inesperado",

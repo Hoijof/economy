@@ -53,6 +53,7 @@ export default function ManageExpense({expenseId = null}) {
     }
   }, [db, expenseId]);
 
+  // Get all tags from the database
   React.useEffect(() => {
     if (db) {
       let tags = db.get('expenseTags');
@@ -65,6 +66,7 @@ export default function ManageExpense({expenseId = null}) {
     }
   } , [db]);
 
+  // Get all types from the database
   React.useEffect(() => {
     if (db) {
       let types = db.get('expenseTypes');
@@ -77,6 +79,7 @@ export default function ManageExpense({expenseId = null}) {
     }
   } , [db]);
 
+  // Handle create or edit of the expense
   const handleAddExpense = useCallback(() => {
     if (db) {
       if (expenseId) {
@@ -92,6 +95,18 @@ export default function ManageExpense({expenseId = null}) {
       router.push('/')
     }
   }, [db, expenseId, router, type, quantity, date, tags]);
+
+  const reloadTags = useCallback(() => {
+    if (db) {
+      setTagOptions(db.get('expenseTags'));
+    }
+  } , [db]);
+
+  const reloadTypes = useCallback(() => {
+    if (db) {
+      setTypeOptions(db.get('expenseTypes'));
+    }
+  } , [db]);
 
   if (!db || tagOptions.length === 0 || typeOptions.length === 0) {
     return null;
@@ -127,6 +142,7 @@ export default function ManageExpense({expenseId = null}) {
             type={type}
             onChange={setType}
             options={typeOptions}
+            reloadTypes={reloadTypes}
           />
           <ExpenseQuantitySelector
             value={quantity}
@@ -146,6 +162,7 @@ export default function ManageExpense({expenseId = null}) {
             tags={tags}
             onChange={setTags}
             options={tagOptions}
+            reloadTags={reloadTags}
           />
         </Grid>
       </main>

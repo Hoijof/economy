@@ -1,12 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 
 import {
   Typography,
   Grid,
   IconButton,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
   // @ts-ignore
 } from "@mui/material"; // @ts-ignore
@@ -15,13 +12,16 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 
 import useTranslation from "../hooks/useTranslation";
+import { ProviderContext } from "./Popup/PopupProvider";
+import { PopupAdd } from "./Popup/PopupAdd";
 
-export function ExpenseTagSelector({ tags, onChange, options }) {
+export function ExpenseTagSelector({ tags, onChange, options, reloadTags }) {
   const [t] = useTranslation();
+  const { open, close } = useContext(ProviderContext);
 
   const handleClickType = useCallback(() => {
-    console.warn("handleClickTags not yet implemented");
-  }, []);
+    open(<PopupAdd collectionName="expenseTags" title={t["addExpenseTagsNew"]} buttonText={t["WordAdd"]} documentField="name" onClose={() => {close(); reloadTags();}}/>);
+  }, [close, open, reloadTags, t]);
 
   const handleChangeTag = useCallback(
     (event) => {
