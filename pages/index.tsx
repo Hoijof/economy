@@ -19,6 +19,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import useDb from '../hooks/useDb';
 import useTranslation from '../hooks/useTranslation';
+import {
+  deleteExpense,
+  getExpenseHash,
+  getThisMonthExpenses,
+} from '../services/expenseService';
 
 export default function Home() {
   const db = useDb('economy');
@@ -27,10 +32,8 @@ export default function Home() {
   const [expenses, setExpenses] = React.useState([]);
 
   React.useEffect(() => {
-    if (db) {
-      setExpenses(db.get('expenses') as Expense[]);
-    }
-  }, [db]);
+    setExpenses(getThisMonthExpenses());
+  }, []);
 
   const getTypeName = useCallback(
     (typeId: number) => {
@@ -45,16 +48,17 @@ export default function Home() {
     [db, t],
   );
 
-  const deleteExpense = useCallback(
-    (id: number) => {
-      if (!db) {
+  const handleDeleteExpense = useCallback(
+    (hash: string) => {
+      if (!hash) {
         return;
       }
 
-      db.delete('expenses', id);
-      setExpenses(expenses.filter((expense) => expense.id !== id));
+      deleteExpense(hash);
+
+      setExpenses(expenses.filter((expense) => expense.id !== hash));
     },
-    [db, expenses],
+    [expenses],
   );
 
   return (
@@ -70,8 +74,8 @@ export default function Home() {
         </Link>
       </Grid>
       <Grid container item direction="column">
-        {expenses.map(({ id, quantity, type, date, tags }) => (
-          <Link href={`/expenses/${id}`} key={id}>
+        {expenses.map(({ id, quantity, type, date, tags, hash }) => (
+          <Link href={`/expenses/${getExpenseHash({ date, id })}`} key={id}>
             <Card key={id} sx={{ margin: 2, cursor: 'pointer' }}>
               <CardContent>
                 <Grid container direction="row">
@@ -99,7 +103,7 @@ export default function Home() {
                     <IconButton
                       size="small"
                       onClick={(e) => {
-                        deleteExpense(id);
+                        handleDeleteExpense(hash);
                         e.stopPropagation();
                       }}
                     >

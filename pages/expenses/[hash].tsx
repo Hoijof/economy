@@ -4,7 +4,7 @@ import ManageExpense from '../../components/ManageExpense';
 
 export default function Expense() {
   const router = useRouter();
-  const { id } = router.query;
+  const { hash } = router.query;
 
-  return <ManageExpense expenseId={parseInt(id)} />;
+  return <ManageExpense expenseHash={hash} />;
 }

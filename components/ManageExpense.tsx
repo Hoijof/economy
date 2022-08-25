@@ -19,8 +19,13 @@ import { ExpenseQuantitySelector } from './ExpenseQuantitySelector';
 import { createExpense } from '../utils/factories';
 import { ExpenseDateSelector } from './ExpenseDateSelector';
 import { ExpenseTagSelector } from './ExpenseTagSelector';
+import {
+  addExpense,
+  getExpenseByHash,
+  updateExpense,
+} from '../services/expenseService';
 
-export default function ManageExpense({ expenseId = null }) {
+export default function ManageExpense({ expenseHash = null }) {
   const db = useDb('economy');
   const [t] = useTranslation();
   const router = useRouter();
@@ -34,11 +39,11 @@ export default function ManageExpense({ expenseId = null }) {
   const [tags, setTags] = useState([]);
 
   React.useEffect(() => {
-    if (expenseId && db) {
-      const expense = db.get('expenses', expenseId);
+    if (expenseHash) {
+      const expense = getExpenseByHash(expenseHash);
 
       if (!expense) {
-        throw new Error(`Expense with id ${expenseId} not found`);
+        throw new Error(`Expense with hash ${expenseHash} not found`);
       }
 
       const { type, quantity, date, tags } = expense;
@@ -47,7 +52,7 @@ export default function ManageExpense({ expenseId = null }) {
       setDate(new Date(date));
       setTags(tags);
     }
-  }, [db, expenseId]);
+  }, [db, expenseHash]);
 
   // Get all tags from the database
   React.useEffect(() => {
@@ -77,20 +82,18 @@ export default function ManageExpense({ expenseId = null }) {
 
   // Handle create or edit of the expense
   const handleAddExpense = useCallback(() => {
-    if (db) {
-      if (expenseId) {
-        db.update('expenses', expenseId, {
-          type,
-          quantity,
-          date,
-          tags,
-        });
-      } else {
-        db.add('expenses', createExpense(quantity, type, date, tags));
-      }
-      router.push('/');
+    if (expenseHash) {
+      updateExpense(expenseHash, {
+        type,
+        quantity,
+        date,
+        tags,
+      });
+    } else {
+      addExpense(createExpense(quantity, type, date, tags));
     }
-  }, [db, expenseId, router, type, quantity, date, tags]);
+    router.push('/');
+  }, [expenseHash, router, type, quantity, date, tags]);
 
   const reloadTags = useCallback(() => {
     if (db) {
@@ -111,7 +114,7 @@ export default function ManageExpense({ expenseId = null }) {
   return (
     <>
       <Head>
-        <title>{expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}</title>
+        <title>{expenseHash ? t['editExpenseCTA'] : t['addExpenseCTA']}</title>
         <meta name="description" content="General summary of Economy" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -130,7 +133,7 @@ export default function ManageExpense({ expenseId = null }) {
           onClick={handleAddExpense}
           sx={{ width: '100%' }}
         >
-          {expenseId ? t['editExpenseCTA'] : t['addExpenseCTA']}
+          {expenseHash ? t['editExpenseCTA'] : t['addExpenseCTA']}
         </Button>
       </Grid>
       <ExpenseDateSelector value={date} onChange={setDate} />

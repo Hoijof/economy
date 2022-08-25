@@ -18,6 +18,18 @@ import useTranslation from '../hooks/useTranslation';
 export function ExpenseDateSelector({ value, onChange }) {
   const [t] = useTranslation();
 
+  const [calendarDate, setCalendarDate] = React.useState(value);
+
+  const handleDateChange = React.useCallback(
+    (date) => {
+      const cDate = new Date(date);
+
+      setCalendarDate(cDate);
+      onChange(cDate);
+    },
+    [onChange],
+  );
+
   return (
     <>
       <Grid item container>
@@ -30,9 +42,12 @@ export function ExpenseDateSelector({ value, onChange }) {
           <MobileDatePicker
             label="Date mobile"
             inputFormat={t['dateFormat']}
-            value={value}
-            onChange={onChange}
-            renderInput={(params) => <TextField {...params} />}
+            value={calendarDate}
+            onAccept={handleDateChange}
+            onChange={setCalendarDate}
+            renderInput={(params) => (
+              <TextField {...params} defaultValue={value} />
+            )}
           />
         </LocalizationProvider>
       </Grid>
