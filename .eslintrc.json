@@ -15,7 +15,23 @@
         "usePrettierrc": true
       }
     ],
-    "indent": ["error", 2],
+   "indent": ["error", 2, {
+      "SwitchCase": 1,
+      "VariableDeclarator": 1,
+      "outerIIFEBody": 1,
+      // MemberExpression: null,
+      // CallExpression: {
+        // parameters: null,
+      // },
+      "FunctionDeclaration": {
+        "parameters": 1,
+        "body": 1
+      },
+      "FunctionExpression": {
+        "parameters": 1,
+        "body": 1
+      }
+    }],
     "max-len": ["error", { "code": 80 }]
   }
 }
